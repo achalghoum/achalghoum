@@ -1,4 +1,4 @@
-#Amine Chalghoum
+# Amine Chalghoum
 
 Machine learning engineer in Aachen. Research master's from RWTH Aachen, four years of production Python at Aventa.
 
