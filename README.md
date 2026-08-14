@@ -2,7 +2,7 @@
 
 Machine learning engineer in Aachen.
 
-Most of my work circles the same question: what does a model get to condition on, and when. Smoothing lets a world model see the future during training but not at deployment. Neighborhood attention decides how far a token can look before you pay quadratic cost. Retrieval decides what an LLM is allowed to know. Different domains, one design axis — and it's usually where the interesting constraints live.
+Most of my work circles the same question: what does a model get to condition on, and when. Smoothing lets a world model see the future during training to improve the lower bound of its ELBO. Neighborhood attention decides how far a token can look before you pay quadratic cost. Retrieval decides what an LLM is allowed to know. Different domains, one design axis — and it's usually where the interesting constraints live.
 
 ---
 
