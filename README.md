@@ -51,7 +51,7 @@ The day job is production Python — four years of it, currently on a knowledge-
 - **Extraction pipelines that admit they're wrong.** Append-only claim ledgers with provenance and retraction, human-in-the-loop review for low-confidence merges, readable views as replayable projections.
 - **Entity resolution** at production scale, and MCP servers for exposing structured data to agents.
 - **Backends.** FastAPI, PostgreSQL, SQLAlchemy, multi-tenant isolation, AWS serverless, Docker.
-- **Messy real-world input.** OCR with fuzzy matching, German free-text parsing, rules-based validation.
+- **Messy real-world input.** OCR with fuzzy matching,  free-text parsing, rules-based validation.
 - **Languages.** Python, TypeScript, Java, C#. Arabic, English, German, French.
 
 amine.chalghoum@gmail.com
