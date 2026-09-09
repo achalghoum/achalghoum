@@ -24,7 +24,7 @@ Neighborhood attention buys linear cost by restricting each token to a local win
 
 MSNAT splits each layer's heads into parallel groups with different token-merging factors and window sizes — 1×/2×/4×/8× merging against windows of 17/13/11/9 in early layers — so a single block reads fine detail and coarse structure at once, and the receptive field grows exponentially with depth while cost stays linear. Global information travels through learnable register tokens on a separate O(N) message-passing path, under a `flex_attention` block mask that lets spatial tokens reach registers but not each other. The whole stack is dimension-generic: 1D, 2D and 3D share the same attention code.
 
-Trained from scratch with no pretraining. 3M parameters reaches 89% top-1 on CIFAR-10 and 70% on CIFAR-100; a 35M model reaches 42% top-1 on ImageNet-1k after nine epochs. Written up as a paper proposal.
+Trained from scratch, on the small datasets where transformers usually need pretraining to be worth anything. 3M parameters reaches 89% top-1 on CIFAR-10, 70% on CIFAR-100 and 50% on Caltech-256 — against roughly 12% for a Swin transformer on Caltech-256 under the same no-pretraining conditions.
 
 ## [spool](https://github.com/achalghoum/spool)
 *Bidirectional temporal attention for video*
@@ -38,15 +38,24 @@ Global temporal context arrives through learnable context frames appended at the
 
 Top-*k* dense retrieval optimizes relevance and gets redundancy for free: the *k* nearest neighbours of a query are often near each other too, so the LLM receives one perspective restated *k* times. Dewey treats context selection as a coverage problem instead of a ranking one.
 
-Candidates from a dense FAISS pass are embedded spectrally (Nyström-approximated, so the eigendecomposition scales) and clustered into thematic groups, which makes the query's distinct facets explicit rather than implicit in the score ordering. Within each cluster a PageRank pass over the affinity graph finds documents that are central to their own theme rather than merely close to the query, and selection takes a few from each cluster — diversity enforced structurally, not through a penalty term. A sparse BM25 pass then locates the relevant chunks inside the selected documents, and a learned re-ranker scores them.
+Candidates from a dense FAISS pass are embedded spectrally (Nyström-approximated, so the eigendecomposition scales) and clustered into thematic groups, which makes the query's distinct facets explicit rather than implicit in the score ordering. Within each cluster a PageRank pass over the affinity graph finds documents that are central to their own theme rather than merely close to the query, and selection takes a few from each cluster — diversity enforced structurally, not through a penalty term. A learned re-ranker then scores the survivors on dense similarity, PageRank centrality and BM25 together with each candidate's rank inside its own cluster, trained with a pairwise margin ranking loss: the cluster structure reaches the ranker as features rather than as a post-hoc filter.
 
 Graph construction, spectral embedding, clustering and PageRank are written from scratch in PyTorch so the whole pipeline stays on the GPU and differentiable end to end.
+
+## [nap](https://github.com/NAPPYBOYS/app)
+*Process discovery through a neural network's attributions*
+
+Classical process discovery reads an event log directly: count which activities follow which, fold that relation into a Petri net. The counting is the model. NAP puts a network in between — an Inception-style 1D convolutional network is trained to predict the next activity in a trace, and the process model is recovered from what the network learned rather than from the log's co-occurrence statistics.
+
+Recovery runs through SHAP. Attributions for each predicted activity are aggregated across traces into an activity-by-activity matrix, thresholded into a directly-follows graph, and converted into a Petri net using the log's own start and end activities as markings. The result is a statement about the predictor's internal structure, which is only as good as the predictor — a useful failure mode, since it makes the model's disagreements with the log visible instead of averaging them away.
+
+Measured against the pm4py alpha, heuristics, inductive and ILP miners on fitness, precision, simplicity and generalisation, behind a FastAPI and MongoDB service with a React front end for uploading logs, running training and inspecting the resulting nets. Master's research project, RWTH Aachen, 2023.
 
 ---
 
 ## Elsewhere
 
-The day job is production Python — four years of it, currently on a knowledge-graph platform built around an eight-stage LLM extraction pipeline. Things I've picked up along the way that don't fit above:
+The day job is production Python — four years of it, currently on ContextCore, a company knowledge base that AI agents read from. Things I've picked up along the way that don't fit above:
 
 - **Extraction pipelines that admit they're wrong.** Append-only claim ledgers with provenance and retraction, human-in-the-loop review for low-confidence merges, readable views as replayable projections.
 - **Entity resolution** at production scale, and MCP servers for exposing structured data to agents.
