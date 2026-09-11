@@ -50,15 +50,3 @@ Classical process discovery reads an event log directly: count which activities 
 Recovery runs through SHAP. Attributions for each predicted activity are aggregated across traces into an activity-by-activity matrix, thresholded into a directly-follows graph, and converted into a Petri net using the log's own start and end activities as markings. The result is a statement about the predictor's internal structure, which is only as good as the predictor — a useful failure mode, since it makes the model's disagreements with the log visible instead of averaging them away.
 
 Measured against the pm4py alpha, heuristics, inductive and ILP miners on fitness, precision, simplicity and generalisation, behind a FastAPI and MongoDB service with a React front end for uploading logs, running training and inspecting the resulting nets.
-
----
-
-## Elsewhere
-
-The day job is production Python — four years of it, currently on ContextCore, a company knowledge base that AI agents read from. Things I've picked up along the way that don't fit above:
-
-- **Extraction pipelines that admit they're wrong.** Append-only claim ledgers with provenance and retraction, human-in-the-loop review for low-confidence merges, readable views as replayable projections.
-- **Entity resolution** at production scale, and MCP servers for exposing structured data to agents.
-- **Backends.** FastAPI, PostgreSQL, SQLAlchemy, multi-tenant isolation, AWS serverless, Docker.
-- **Messy real-world input.** OCR with fuzzy matching,  free-text parsing, rules-based validation.
-- **Languages.** Python, TypeScript, Java, C#. Arabic, English, German, French.
